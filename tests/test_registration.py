@@ -1,6 +1,7 @@
 import pytest
-from conftest import generate_email, generate_password, generate_name, wait_for_element, wait_for_clickable, is_element_displayed
+from helpers import generate_email, generate_password, generate_name, wait_for_element, wait_for_clickable, is_element_displayed
 from locators import *
+from urls import LOGIN_PAGE_URL
 
 
 class TestRegistration:
@@ -12,7 +13,7 @@ class TestRegistration:
         name = generate_name()
         
         # Переходим к регистрации
-        driver.get("https://stellarburgers.education-services.ru")
+        driver.get(MAIN_PAGE_URL)
         wait_for_clickable(driver, LOGIN_BUTTON_MAIN).click()
         wait_for_clickable(driver, REGISTER_LINK).click()
         
@@ -24,7 +25,7 @@ class TestRegistration:
         
         # Проверяем, что перешли на страницу логина после успешной регистрации
         assert is_element_displayed(driver, HEADER_LOGIN)
-        assert driver.current_url == 'https://stellarburgers.education-services.ru/login'
+        assert driver.current_url == LOGIN_PAGE_URL
 
     @pytest.mark.xfail(reason="Баг сайта: регистрация с паролем менее 6 символов проходит успешно")
     def test_registration_with_short_password(self, driver):
@@ -35,7 +36,7 @@ class TestRegistration:
         name = generate_name()
         
         # Переходим к регистрации
-        driver.get("https://stellarburgers.education-services.ru")
+        driver.get(MAIN_PAGE_URL)
         wait_for_clickable(driver, LOGIN_BUTTON_MAIN).click()
         wait_for_clickable(driver, REGISTER_LINK).click()
         
@@ -45,9 +46,8 @@ class TestRegistration:
         wait_for_element(driver, PASSWORD_INPUT_REGISTER).send_keys(password)
         wait_for_clickable(driver, REGISTER_BUTTON).click()
         
-        # Добавляем небольшую паузу для стабилизации
-        import time
-        time.sleep(2)
+        # Ждем стабилизации - используем ожидание вместо time.sleep
+        wait_for_element(driver, REGISTER_BUTTON)
         
         # Проверяем, что остались на странице регистрации (не перешли на логин)
         current_url = driver.current_url

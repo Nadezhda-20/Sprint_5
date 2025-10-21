@@ -1,55 +1,39 @@
 import pytest
-from conftest import wait_for_element, wait_for_clickable
+from helpers import wait_for_element, wait_for_clickable, wait_for_text_to_be_present
 from locators import *
-import time
+from urls import MAIN_PAGE_URL
 
 
 class TestConstructor:
     def test_switch_to_buns_section(self, driver):
         """Проверь, что работает переход к разделу «Булки»."""
-        driver.get("https://stellarburgers.education-services.ru")
+        driver.get(MAIN_PAGE_URL)
         
-        # Добавляем небольшую паузу для полной загрузки
-        time.sleep(2)
+        # Ждем загрузки главной страницы
+        wait_for_element(driver, HEADER_MAIN)
         
-        # Переходим в раздел "Соусы"
+        # Переходим в раздел "Соусы" и ждем активации
         wait_for_clickable(driver, SAUCES_SECTION).click()
+        wait_for_text_to_be_present(driver, ACTIVE_SECTION, "Соусы")
         
-        # Ждем немного для переключения
-        time.sleep(1)
-        
-        # Переходим в раздел "Булки"
+        # Переходим в раздел "Булки" и ждем активации
         wait_for_clickable(driver, BUNS_SECTION).click()
-        
-        # Ждем немного для переключения
-        time.sleep(1)
+        wait_for_text_to_be_present(driver, ACTIVE_SECTION, "Булки")
         
         # Проверяем, что раздел "Булки" активен
         active_section = wait_for_element(driver, ACTIVE_SECTION)
-        active_text = active_section.text
-        
-        # Дополнительная проверка: если все еще "Соусы", попробуем еще раз
-        if 'Соусы' in active_text:
-            time.sleep(1)
-            wait_for_clickable(driver, BUNS_SECTION).click()
-            time.sleep(1)
-            active_section = wait_for_element(driver, ACTIVE_SECTION)
-            active_text = active_section.text
-        
-        assert 'Булки' in active_text, f"Ожидался активный раздел 'Булки', но получен: {active_text}"
+        assert 'Булки' in active_section.text
 
     def test_switch_to_sauces_section(self, driver):
         """Проверь, что работает переход к разделу «Соусы»."""
-        driver.get("https://stellarburgers.education-services.ru")
+        driver.get(MAIN_PAGE_URL)
         
-        # Добавляем небольшую паузу для полной загрузки
-        time.sleep(2)
+        # Ждем загрузки главной страницы
+        wait_for_element(driver, HEADER_MAIN)
         
-        # Переходим в раздел "Соусы"
+        # Переходим в раздел "Соусы" и ждем активации
         wait_for_clickable(driver, SAUCES_SECTION).click()
-        
-        # Ждем немного для переключения
-        time.sleep(1)
+        wait_for_text_to_be_present(driver, ACTIVE_SECTION, "Соусы")
         
         # Проверяем, что раздел "Соусы" активен
         active_section = wait_for_element(driver, ACTIVE_SECTION)
@@ -57,16 +41,14 @@ class TestConstructor:
 
     def test_switch_to_fillings_section(self, driver):
         """Проверь, что работает переход к разделу «Начинки»."""
-        driver.get("https://stellarburgers.education-services.ru")
+        driver.get(MAIN_PAGE_URL)
         
-        # Добавляем небольшую паузу для полной загрузки
-        time.sleep(2)
+        # Ждем загрузки главной страницы
+        wait_for_element(driver, HEADER_MAIN)
         
-        # Переходим в раздел "Начинки"
+        # Переходим в раздел "Начинки" и ждем активации
         wait_for_clickable(driver, FILLINGS_SECTION).click()
-        
-        # Ждем немного для переключения
-        time.sleep(1)
+        wait_for_text_to_be_present(driver, ACTIVE_SECTION, "Начинки")
         
         # Проверяем, что раздел "Начинки" активен
         active_section = wait_for_element(driver, ACTIVE_SECTION)
